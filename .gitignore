@@ -1,0 +1,9 @@
+
+.DS_Store
+sonarqube/
+soy-monolith-postgres/
+v4-soy-db
+.scannerwork
+v4-soy-db.tgz
+variables.env
+erd.svg
