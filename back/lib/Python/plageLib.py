@@ -139,7 +139,12 @@ def clears_folder(fold):
 
             #log("Elements of the folder to change rights:",items)
             for i in items:
-                os.chmod(i, 0o755)  # works on both Python 2 and 3
+                if os.path.isdir(i):
+                    os.chmod(i, 0o700)
+                else:
+                    os.chmod(i, 0o600)  
+
+                    
 
             # Then removes it
             shutil.rmtree(fold)  # errors are not ignored there

@@ -130,14 +130,18 @@ class ModelExerciseProduction extends Model {
 
     // cannot go by this route as it renders html and does not return JSON
     //let route = ConfServ.servURL + 'StudentStatement/' + ps_id + '/' + ex_id
-    debug("trying to get exerc " + ex_id + " for user " + user_id + " in session " + ps_id);
     const studentStatement = await ModelStudentStatement.read(ps_id, user_id, ex_id);
-    if (studentStatement) {
-      debug("got a studStatement from DB"); // + JSON.stringify(studentStatement))
-    } else {
-   
+
+    if (!studentStatement) {
       debug("got nothing from DB: " + studentStatement);
+      callback(
+        new Error("StudentStatement not found for this exercise. Please open the exercise before submitting."),
+        undefined
+      );
+      return;
     }
+
+    debug("got a studStatement from DB");
 
     // Get the analysis script for this exercise
     let req = {}; req.params = {}; req.params.exerciseId = ex_id;

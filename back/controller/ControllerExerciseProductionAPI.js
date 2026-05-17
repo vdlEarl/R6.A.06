@@ -33,14 +33,21 @@ module.exports.create = async function (req, res) {
   const user = req.session;
   let user_id = user.user_id;
 
-  const stmt = await ModelStudentStatement.read(ps_id, user_id, ex_id)
-  if(stmt){
-    const now = Date.now();
-    const end = Date.parse(stmt.deadline_date.toString())
-    if(end < now) {
-      res.status(401).json({error: "Can not submit productions anymore"})
-      return;
-    }
+  const stmt = await ModelStudentStatement.read(ps_id, user_id, ex_id);
+
+  if (!stmt) {
+    return res.status(404).json({
+      error: "No statement found for this exercise. Please open the exercise before submitting."
+    });
+  }
+
+  const now = Date.now();
+  const end = Date.parse(stmt.deadline_date.toString());
+
+  if (end < now) {
+    return res.status(401).json({
+      error: "Can not submit productions anymore"
+    });
   }
 
   //let user_id = req.body.user_id; //for testing purposes //TODO : NEEDS TO BE CHANGED LATER

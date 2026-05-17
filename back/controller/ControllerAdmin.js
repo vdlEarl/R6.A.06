@@ -1,7 +1,7 @@
 const debug = require("debug")("ControllerAdmin");
 const ModelPlageUser = require("../model/ModelPlageUser");
 
-getAllUsers = async function (req, res) {
+const getAllUsers = async function (req, res) {
   debug("Read all users");
   const user = req.session;
   const usersList = await ModelPlageUser.getAllUsers();

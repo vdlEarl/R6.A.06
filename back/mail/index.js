@@ -69,14 +69,21 @@ function sendMail(to, subject, template, CORDIALLY, ALL_RIGHTS_RESERVED, text = 
     return new Promise(async (resolve, reject) => {
         if(!validateEmail(to)) return reject("Mail invalide : " + to)
         let compiled_template = await readFileSync(__dirname + "/mail.html", {encoding: "utf-8"})
+        const escapedTemplate = String(template)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
         compiled_template = ejs.render(compiled_template, {
-            content: template,
+            content: escapedTemplate,
             baseUrl: process.env.PLAGE_ENV,
             appName: process.env.APP_NAME,
             emailAccount: process.env.EMAIL_ACCOUNT,
             ALL_RIGHTS_RESERVED: ALL_RIGHTS_RESERVED,
             CORDIALLY: CORDIALLY,
-        })
+        });
 
         compiled_template = compiled_template.replace(/{{ BASE_URL }}/gi, process.env.PLAGE_ENV || "")
         
